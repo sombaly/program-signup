@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+export const runtime = 'nodejs';
+
 import { readJSON, writeJSON } from '@/lib/github';
 
 type Session = { id: string; label: string; capacity: number };
