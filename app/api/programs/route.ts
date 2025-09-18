@@ -1,6 +1,5 @@
-import { NextResponse } from 'next/server';
 export const runtime = 'nodejs';
-
+import { NextResponse } from 'next/server';
 import { readJSON, writeJSON } from '@/lib/github';
 
 type Session = { id: string; label: string; capacity: number };
@@ -8,7 +7,6 @@ type Program = { id: string; title: string; sessions: Session[] };
 
 const PROGRAMS_PATH = process.env.GITHUB_PROGRAMS_PATH!;
 
-// Default seed
 const DEFAULT_PROGRAMS: Program[] = [
   { id: "eco101", title: "숲해설 비밀코스 투어", sessions: [
     { id: "2025-09-27-am", label: "9/27(토) 오전", capacity: 20 },
@@ -24,11 +22,14 @@ const DEFAULT_PROGRAMS: Program[] = [
 ];
 
 export async function GET() {
-  const { json } = await readJSON<Program[]>(PROGRAMS_PATH);
-  if (!json) {
-    // seed if empty
-    await writeJSON(PROGRAMS_PATH, DEFAULT_PROGRAMS, 'seed programs');
-    return NextResponse.json({ programs: DEFAULT_PROGRAMS });
+  try {
+    const { json } = await readJSON<Program[]>(PROGRAMS_PATH);
+    if (!json) {
+      await writeJSON(PROGRAMS_PATH, DEFAULT_PROGRAMS, 'seed programs');
+      return NextResponse.json({ programs: DEFAULT_PROGRAMS });
+    }
+    return NextResponse.json({ programs: json });
+  } catch (e: any) {
+    return new NextResponse(`PROGRAMS_ERROR: ${e?.message || e}`, { status: 500 });
   }
-  return NextResponse.json({ programs: json });
 }
