@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
+export const runtime = 'nodejs';
 
 export async function GET() {
   return NextResponse.json({
-    GITHUB_TOKEN_SET: !!process.env.GITHUB_TOKEN,  // 토큰 값 유무만 표시
+    GITHUB_TOKEN_SET: !!process.env.GITHUB_TOKEN,
     GITHUB_OWNER: process.env.GITHUB_OWNER,
     GITHUB_REPO: process.env.GITHUB_REPO,
     GITHUB_BRANCH: process.env.GITHUB_BRANCH,
